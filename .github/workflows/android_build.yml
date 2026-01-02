@@ -9,40 +9,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: 📥 Kodları Çek
+    - name: Checkout Code
       uses: actions/checkout@v4
 
-    - name: 🟢 Node.js Kurulumu
+    - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: 📦 Web Paketlerini Yükle
+    - name: Install Dependencies
       run: npm install
 
-    - name: 🏗️ Web Sitesini İnşa Et (Build)
+    - name: Build Web Project
       run: npm run build
 
-    - name: 📱 Capacitor Kurulumu
+    - name: Setup Capacitor
       run: |
         npm install @capacitor/core @capacitor/cli @capacitor/android
         npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist
         npx cap add android
 
-    - name: ☕ Java Kurulumu (GÜNCELLENDİ: v21)
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '21' # Hata burada çözüldü (17 -> 21 yapıldı)
+        java-version: '21'
 
-    - name: 🛠️ APK İnşa Et
+    - name: Build APK
       run: |
         cd android
         chmod +x gradlew
         ./gradlew assembleDebug
 
-    - name: 🎁 APK'yı Teslim Et
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: web-donusturulmus-apk
+        name: app-debug
         path: android/app/build/outputs/apk/debug/app-debug.apk
