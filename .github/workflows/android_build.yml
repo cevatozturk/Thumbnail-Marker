@@ -29,12 +29,13 @@ jobs:
         npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist
         npx cap add android
 
-    - name: 🔧 Fix Kotlin Duplicates (Cerrahi Müdahale)
+    - name: 🔧 Fix Kotlin Versions (GÜNCELLENDİ)
       run: |
         cd android/app
-        # Bu komut build.gradle dosyasının sonuna çakışmayı önleyen özel bir kural ekler
-        echo 'dependencies { modules { module("org.jetbrains.kotlin:kotlin-stdlib-jdk7") { replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk7 is now part of kotlin-stdlib") } module("org.jetbrains.kotlin:kotlin-stdlib-jdk8") { replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk8 is now part of kotlin-stdlib") } } }' >> build.gradle
-        echo "✅ Kotlin çakışma kuralı enjekte edildi."
+        # Eski hatalı kodu sildik. Yerine "Bütün Kotlinleri 1.9.20 sürümüne zorla" diyen kuralı ekliyoruz.
+        # Bu komut çakışmayı kesin olarak önler.
+        printf "\nconfigurations.all { resolutionStrategy { eachDependency { details -> if (details.requested.group == 'org.jetbrains.kotlin' && details.requested.name.startsWith('kotlin-stdlib')) { details.useVersion '1.9.20' } } } }\n" >> build.gradle
+        echo "✅ Kotlin sürüm sabitleyici eklendi."
 
     - name: Setup Java
       uses: actions/setup-java@v4
