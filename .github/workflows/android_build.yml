@@ -1,17 +1,50 @@
-name: Android Diagnostic
+name: Web to APK Converter
 
-on: [push]
+on:
+  push:
+    branches: [ "main", "master" ]
 
 jobs:
-  check-files:
+  build:
     runs-on: ubuntu-latest
+
     steps:
     - name: 📥 Kodları Çek
       uses: actions/checkout@v4
 
-    - name: 📂 Dosya Yapısını Listele (Teşhis)
+    - name: 🟢 Node.js Kurulumu (Web Motoru)
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: 📦 Web Paketlerini Yükle
+      run: npm install
+
+    - name: 🏗️ Web Sitesini İnşa Et (Build)
+      run: npm run build
+      # Not: Vite projeleri genelde 'dist' klasörü üretir.
+
+    - name: 📱 Capacitor Kurulumu (Dönüştürücü)
       run: |
-        echo "--- ANA DİZİN LİSTESİ ---"
-        ls -la
-        echo "--- GRADLEW ARANIYOR ---"
-        find . -name "gradlew"
+        npm install @capacitor/core @capacitor/cli @capacitor/android
+        # Projeyi mobil uyumlu hale getiriyoruz:
+        npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist --npm-client npm
+        npx cap add android
+
+    - name: ☕ Java Kurulumu (Android İçin)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: 🛠️ APK İnşa Et
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    - name: 🎁 APK'yı Teslim Et
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-donusturulmus-apk
+        path: android/app/build/outputs/apk/debug/app-debug.apk
