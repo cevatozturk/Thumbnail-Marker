@@ -27,8 +27,8 @@ jobs:
     - name: 📱 Capacitor Kurulumu (Dönüştürücü)
       run: |
         npm install @capacitor/core @capacitor/cli @capacitor/android
-        # Projeyi mobil uyumlu hale getiriyoruz:
-        npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist --npm-client npm
+        # DÜZELTME: Hata veren '--npm-client' parametresi kaldırıldı.
+        npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist
         npx cap add android
 
     - name: ☕ Java Kurulumu (Android İçin)
