@@ -29,6 +29,13 @@ jobs:
         npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist
         npx cap add android
 
+    - name: 🔧 Fix Kotlin Duplicates (Cerrahi Müdahale)
+      run: |
+        cd android/app
+        # Bu komut build.gradle dosyasının sonuna çakışmayı önleyen özel bir kural ekler
+        echo 'dependencies { modules { module("org.jetbrains.kotlin:kotlin-stdlib-jdk7") { replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk7 is now part of kotlin-stdlib") } module("org.jetbrains.kotlin:kotlin-stdlib-jdk8") { replacedBy("org.jetbrains.kotlin:kotlin-stdlib", "kotlin-stdlib-jdk8 is now part of kotlin-stdlib") } } }' >> build.gradle
+        echo "✅ Kotlin çakışma kuralı enjekte edildi."
+
     - name: Setup Java
       uses: actions/setup-java@v4
       with:
