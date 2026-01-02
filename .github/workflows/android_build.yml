@@ -12,7 +12,7 @@ jobs:
     - name: 📥 Kodları Çek
       uses: actions/checkout@v4
 
-    - name: 🟢 Node.js Kurulumu (Web Motoru)
+    - name: 🟢 Node.js Kurulumu
       uses: actions/setup-node@v4
       with:
         node-version: '20'
@@ -22,20 +22,18 @@ jobs:
 
     - name: 🏗️ Web Sitesini İnşa Et (Build)
       run: npm run build
-      # Not: Vite projeleri genelde 'dist' klasörü üretir.
 
-    - name: 📱 Capacitor Kurulumu (Dönüştürücü)
+    - name: 📱 Capacitor Kurulumu
       run: |
         npm install @capacitor/core @capacitor/cli @capacitor/android
-        # DÜZELTME: Hata veren '--npm-client' parametresi kaldırıldı.
         npx cap init "Uygulamam" "com.salih.uygulama" --web-dir dist
         npx cap add android
 
-    - name: ☕ Java Kurulumu (Android İçin)
+    - name: ☕ Java Kurulumu (GÜNCELLENDİ: v21)
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
-        java-version: '17'
+        java-version: '21' # Hata burada çözüldü (17 -> 21 yapıldı)
 
     - name: 🛠️ APK İnşa Et
       run: |
