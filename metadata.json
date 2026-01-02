@@ -1,0 +1,8 @@
+{
+  "name": "Thumbnail Master AI",
+  "description": "An all-in-one AI-powered platform for YouTube creators to generate SEO-optimized thumbnails, analyze imagery, and create professional voiceovers.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
